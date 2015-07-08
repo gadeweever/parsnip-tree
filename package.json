@@ -1,0 +1,9 @@
+{
+  "name": "Mateys-Ahoy",
+  "version": "0.0.1",
+  "description": "gamal and brennan make a game lol",
+  "dependencies": {
+    "express": "^4.13.1",
+    "socket.io": "^1.3.5"
+  }
+}
