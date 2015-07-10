@@ -1,21 +1,11 @@
 <html>
     <head>
     <title>Socket.IO chat</title>
-    <style>
-        body { background: #66CCFF; }
-    </style>
     </head>
     <body>
     <script src='/socket.io/socket.io.js'></script>
+    <script src='pixi.min.js'></script>
     <script src='http://code.jquery.com/jquery-1.11.1.js'></script>
-    <script>
-        var socket = io();
-        
-        //test function for communication between client/server
-        $('body').click(function(){
-            socket.emit('click', 'click lol');
-            return false;
-        });
-    </script>
+    <script src='client.js'></script>
     </body>
 </html>
