@@ -1,12 +1,15 @@
-var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0x1099bb});
+var renderer = PIXI.autoDetectRenderer(800, 600,{backgroundColor : 0x006994});
 document.body.appendChild(renderer.view);
 
 // create the root of the scene graph
 var stage = new PIXI.Container();
+//create socket
+var socket = io();
 
-ship = new Ship();
+player = new Player('Captain Smitty', 'SS Anne');
 
-stage.addChild(ship.sprite);
+
+stage.addChild(player.ship.sprite);
 animate();
 function animate() {
     requestAnimationFrame(animate);
@@ -19,19 +22,19 @@ document.onmousemove = function(e) {
     cursorX = e.pageX;
     cursorY = e.pageY;
 }
+
 setInterval('clientUpdateLoop()', 100);
 function clientUpdateLoop() {
-    ship.move(cursorX, cursorY);
+    var stepInput = player.genMove(cursorX, cursorY);
+    socket.emit('input', stepInput); 
 }
 
 
 // start animating
 
-var socket = io();
  
 //test function for communication between client/server
 $('body').click(function(){
     socket.emit('click', 'click lol');
-    ship.position.y += 10;
     return false;
 });
