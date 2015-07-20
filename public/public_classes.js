@@ -1,16 +1,25 @@
 /*STATES CLASS: a snapshot of the state of a player after a 
  * certain number of inputs*/
-var State = function (playerKey, num) {
-    this.playerKey = playerKey;
+var State = function (key, num) {
+    this.key = key;
     this.inputNum = num;
     this.x = 0;
     this.y = 0;
     this.rotation = 0;
 }
+State.prototype.updateState = function (input) {
+/*CLIENT SIDE PREDICTION
+    if (this.inputNum == input.inputNum) 
+        this.inputNum = input.inputNum + 1;
+*/
+
+    this.x += input.moveX;
+    this.y += input.moveY;
+}
 /*INPUTS CLASS: inputs which are processed client side and server
 * side in order to update state*/
-var Input = function (playerKey, num) {
-    this.playerKey = playerKey;
+var Input = function (key, num) {
+    this.key = key;
     this.inputNum = num;
     this.type = '';
     this.moveX = 0;
@@ -21,6 +30,7 @@ var Input = function (playerKey, num) {
 }
 //PLAYER CLASS
 var Player = function (playerName, shipName) {
+    this.key = '';
     this.name = playerName;
     this.ship = new Ship(shipName);
     this.level = 1;
@@ -33,17 +43,25 @@ var Player = function (playerName, shipName) {
     this.nextInput = 1;
 }
 
+/*Updates player to reflect given state. Used to handle response from server*/
+Player.prototype.updateState = function (state) {
+    this.key = state.key;
+    this.ship.sprite.position.x = state.x;
+    this.ship.sprite.position.y = state.y;
+    this.ship.sprite.rotation = state.rotation;
+}
 Player.prototype.genMove = function (destX, destY) {
-    input = new Input(this.name, this.nextInput);
-    state = new State(this.name, this.nextInput);
+    input = new Input(this.key, this.nextInput);
+    state = new State(this.key, this.nextInput);
     this.nextInput += 1;
 
     //create input
     input.type = 'move';
-    input.moveX = (this.ship.speed * (destX - this.ship.sprite.position.x))/200; 
-    input.moveY = (this.ship.speed * (destY - this.ship.sprite.position.y))/200;
+    input.moveX = (this.speed * (destX - this.ship.sprite.position.x))/200; 
+    input.moveY = (this.speed * (destY - this.ship.sprite.position.y))/200;
     input.rotation = Math.atan2(this.ship.sprite.position.y - destY, this.ship.sprite.position.x - destX) - .5*Math.PI;
     
+/* TO-DO: CLIENT SIDE PREDICTION CODE  - REVISIT THIS  
     //create states
     state.x = this.ship.sprite.position.x + input.moveX;
     state.y = this.ship.sprite.position.y + input.moveY;
@@ -55,7 +73,7 @@ Player.prototype.genMove = function (destX, destY) {
     this.ship.sprite.rotation = state.rotation;
     //console.log(state);
     this.inputs.push(input);
-    this.states.push(state);
+    this.states.push(state);*/
     return input;
 }
 /*
