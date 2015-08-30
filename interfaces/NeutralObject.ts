@@ -1,1 +1,3 @@
-﻿
+﻿interface NeutralObject{
+  destroy : void
+}
