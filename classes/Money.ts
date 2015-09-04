@@ -3,4 +3,7 @@ class Money implements NeutralObject {
   destroy() {
 
   }
+  constructor(){
+    value = 50;
+  }
 }
